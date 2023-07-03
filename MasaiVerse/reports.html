@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reports Page</title>
+</head>
+<body>
+
+    <nav style="background-color: red; padding: 15px; " >
+        <a style="color: white; text-decoration: solid; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; " href="data.html">Data</a>
+     </nav>
+
+  <h1>Reports Page</h1>
+
+  <table id="reportTable">
+    <thead>
+      <tr>
+        <th>Total Guests</th>
+        <th>Students</th>
+        <th>Working Professionals</th>
+        <th>Average Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="totalGuests">-</td>
+        <td id="students">-</td>
+        <td id="professionals">-</td>
+        <td id="averageAge">-</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    // Fetch the data and generate the report
+    function generateReport() {
+      fetch("http://localhost:9090/registrations")
+        .then(response => response.json())
+        .then(data => {
+          const totalGuests = data.length;
+          const students = data.filter(user => user.profession === "Student").length;
+          const professionals = data.filter(user => user.profession !== "Student").length;
+          const averageAge = calculateAverageAge(data);
+
+         
+          document.getElementById("totalGuests").textContent = totalGuests;
+          document.getElementById("students").textContent = students;
+          document.getElementById("professionals").textContent = professionals;
+          document.getElementById("averageAge").textContent = averageAge.toFixed(2);
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+    
+    function calculateAverageAge(data) {
+      const totalAge = data.reduce((sum, user) => sum + user.age, 0);
+      const averageAge = totalAge / data.length;
+      return averageAge;
+    }
+
+   
+    generateReport();
+  </script>
+
+  <style>
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    
+  </style>
+</body>
+</html>

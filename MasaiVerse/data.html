@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Data Page</title>
+  </head>
+  <body>
+
+    <nav style="background-color: red; padding: 15px; " >
+       <a style="color: white; text-decoration: solid; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; " href="reports.html">Reports</a>
+    </nav>
+
+    <h1>Data Page</h1>
+
+    <label for="search">Search by Name:</label>
+    <input
+      type="text"
+      id="search"
+      onkeyup="searchByName()"
+      placeholder="Enter name..."
+    />
+
+    <label for="sort">Sort by Age:</label>
+    <select id="sort" onchange="sortData()">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
+    </select>
+
+    <label for="filter">Filter by Profession:</label>
+    <select id="filter" onchange="filterData()">
+      <option value="all">All</option>
+      <option value="FSD">FSD</option>
+      <option value="Frontend">Frontend</option>
+      <option value="Backend">Backend</option>
+      <option value="Student">Student</option>
+    </select>
+
+    <div id="userContainer">
+      
+    </div>
+
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit User</h2>
+        <form id="editForm">
+          <label for="editName">Name:</label>
+          <input type="text" id="editName" required /><br />
+
+          <label for="editAge">Age:</label>
+          <input type="number" id="editAge" required /><br />
+
+          <label for="editPlace">Place:</label>
+          <input type="text" id="editPlace" required /><br />
+
+          <label for="editBatch">Batch:</label>
+          <select id="editBatch">
+            <option value="WEB-13">WEB-13</option>
+            <option value="WEB-14">WEB-14</option>
+            <option value="WEB-15">WEB-15</option>
+           </select
+          ><br />
+
+          <label for="editProfession">Profession:</label>
+          <select id="editProfession">
+            <option value="FSD">FSD</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Student">Student</option>
+          </select
+          ><br />
+
+          <button type="submit">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let userData = []; // This array will store the fetched user data
+
+      // Function to fetch user data from JSON server and display cards
+      function fetchUserData() {
+        fetch("http://localhost:9090/registrations")
+          .then((response) => response.json())
+          .then((data) => {
+            userData = data;
+            displayUserCards();
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+     
+      function displayUserCards() {
+        const userContainer = document.getElementById("userContainer");
+        userContainer.innerHTML = "";
+
+        
+        userData.forEach((user) => {
+          const card = document.createElement("div");
+          card.classList.add("user-card");
+
+          card.innerHTML = `
+          <img src="https://cdn-icons-png.flaticon.com/512/147/147133.png" alt="User Image">
+          <p>Name: ${user.name}</p>
+          <p>Age: ${user.age}</p>
+          <p>Place: ${user.place}</p>
+          <p>Batch: ${user.batch}</p>
+          <p>Profession: ${user.profession}</p>
+          <button onclick="editUser(${user.id})">Edit</button>
+          <button onclick="deleteUser(${user.id})">Delete</button>
+        `;
+
+          userContainer.appendChild(card);
+        });
+      }
+
+    
+      function sortData() {
+        const sortType = document.getElementById("sort").value;
+        userData.sort((a, b) =>
+          sortType === "asc" ? a.age - b.age : b.age - a.age
+        );
+        displayUserCards();
+      }
+
+     
+      function filterData() {
+        const filterValue = document.getElementById("filter").value;
+        if (filterValue === "all") {
+          displayUserCards();
+        } else {
+          const filteredData = userData.filter(
+            (user) => user.profession === filterValue
+          );
+          displayFilteredCards(filteredData);
+        }
+      }
+
+     
+      function displayFilteredCards(filteredData) {
+        const userContainer = document.getElementById("userContainer");
+        userContainer.innerHTML = "";
+
+        filteredData.forEach((user) => {
+          const card = document.createElement("div");
+          card.classList.add("user-card");
+
+          card.innerHTML = `
+          <img src="https://cdn-icons-png.flaticon.com/512/147/147133.png" alt="User Image">
+          <p>Name: ${user.name}</p>
+          <p>Age: ${user.age}</p>
+          <p>Place: ${user.place}</p>
+          <p>Batch: ${user.batch}</p>
+          <p>Profession: ${user.profession}</p>
+          <button onclick="editUser(${user.id})">Edit</button>
+          <button onclick="deleteUser(${user.id})">Delete</button>
+        `;
+
+          userContainer.appendChild(card);
+        });
+      }
+
+      
+      function searchByName() {
+        const searchValue = document
+          .getElementById("search")
+          .value.toLowerCase();
+        const filteredData = userData.filter((user) =>
+          user.name.toLowerCase().includes(searchValue)
+        );
+        displayFilteredCards(filteredData);
+      }
+
+     
+      function deleteUser(userId) {
+        fetch(`http://localhost:9090/registrations/${userId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then(() => {
+           alert("Are you sure you want to delete")
+            fetchUserData();
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+     
+      function editUser(userId) {
+        const user = userData.find((user) => user.id === userId);
+        const editModal = document.getElementById("editModal");
+        const editForm = document.getElementById("editForm");
+
+     
+        document.getElementById("editName").value = user.name;
+        document.getElementById("editAge").value = user.age;
+        document.getElementById("editPlace").value = user.place;
+        document.getElementById("editBatch").value = user.batch;
+        document.getElementById("editProfession").value = user.profession;
+
+        editModal.style.display = "block";
+
+        const closeModal = document.getElementsByClassName("close")[0];
+        closeModal.onclick = function () {
+          editModal.style.display = "none";
+        };
+
+        editForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const editedName = document.getElementById("editName").value;
+          const editedAge = document.getElementById("editAge").value;
+          const editedPlace = document.getElementById("editPlace").value;
+          const editedBatch = document.getElementById("editBatch").value;
+          const editedProfession =
+            document.getElementById("editProfession").value;
+
+          const editedUser = {
+            id: user.id,
+            name: editedName,
+            age: editedAge,
+            place: editedPlace,
+            batch: editedBatch,
+            profession: editedProfession,
+          };
+
+          const userIndex = userData.findIndex((user) => user.id === userId);
+          userData[userIndex] = editedUser;
+
+          fetch(`http://localhost:9090/registrations/${userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(editedUser),
+          })
+            .then((response) => response.json())
+            .then(() => {
+              // Fetch updated user data after saving the changes
+              fetchUserData();
+
+              editModal.style.display = "none";
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+      }
+
+      
+
+      window.addEventListener("load", (event) => {
+        fetchUserData();
+        editModal.style.display = "none"
+      });
+    </script>
+
+    <style>
+     
+      .user-card {
+        width: 200px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .user-card > img {
+        width: 100%;
+      }
+
+      #userContainer{
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        margin-top: 50px;
+      }
+
+     
+    </style>
+  </body>
+</html>

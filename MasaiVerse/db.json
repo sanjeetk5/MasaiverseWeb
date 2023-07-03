@@ -1,0 +1,12 @@
+{
+  "registrations": [
+    {
+      "id": 2,
+      "name": "Sanjeet Kumar",
+      "age": "27",
+      "place": "Bihar",
+      "batch": "WEB-15",
+      "profession": "Backend"
+    }
+  ]
+}
