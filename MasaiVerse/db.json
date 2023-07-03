@@ -6,7 +6,15 @@
       "age": "27",
       "place": "Bihar",
       "batch": "WEB-15",
-      "profession": "Backend"
+      "profession": "FSD"
+    },
+    {
+      "name": "sandeep kumar",
+      "age": "27",
+      "place": "Kolkata",
+      "batch": "WEB-15",
+      "profession": "Student",
+      "id": 4
     }
   ]
 }

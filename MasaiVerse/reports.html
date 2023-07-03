@@ -52,7 +52,7 @@
 
     
     function calculateAverageAge(data) {
-      const totalAge = data.reduce((sum, user) => sum + user.age, 0);
+      const totalAge = data.reduce((sum, user) => sum + (+user.age), 0);
       const averageAge = totalAge / data.length;
       return averageAge;
     }
