@@ -79,7 +79,7 @@
 
       // Function to fetch user data from JSON server and display cards
       function fetchUserData() {
-        fetch("http://localhost:9090/registrations")
+        fetch("https://masaiversaaaaa.onrender.com/registrations")
           .then((response) => response.json())
           .then((data) => {
             userData = data;
@@ -172,7 +172,7 @@
 
      
       function deleteUser(userId) {
-        fetch(`http://localhost:9090/registrations/${userId}`, {
+        fetch(`https://masaiversaaaaa.onrender.com/registrations/${userId}`, {
           method: "DELETE",
         })
           .then((response) => response.json())
@@ -225,7 +225,7 @@
           const userIndex = userData.findIndex((user) => user.id === userId);
           userData[userIndex] = editedUser;
 
-          fetch(`http://localhost:9090/registrations/${userId}`, {
+          fetch(`https://masaiversaaaaa.onrender.com/registrations/${userId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
