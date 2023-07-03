@@ -23,6 +23,14 @@
       "batch": "WEB-13",
       "profession": "Frontend",
       "id": 5
+    },
+    {
+      "name": "sanj",
+      "age": "21",
+      "place": "Bihar",
+      "batch": "WEB-14",
+      "profession": "Student",
+      "id": 6
     }
   ]
 }
