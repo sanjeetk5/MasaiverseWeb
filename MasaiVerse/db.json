@@ -15,6 +15,14 @@
       "batch": "WEB-15",
       "profession": "Student",
       "id": 4
+    },
+    {
+      "name": "Sanjet",
+      "age": "23",
+      "place": "Bihar",
+      "batch": "WEB-13",
+      "profession": "Frontend",
+      "id": 5
     }
   ]
 }
